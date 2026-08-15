@@ -40,10 +40,16 @@ function AuthPage() {
     e.preventDefault();
     setBusy(true);
     try {
-      const e1 = emailSchema.safeParse(email);
-      const p1 = passwordSchema.safeParse(password);
+      // Demo admin shortcut: "admin" / "admin"
+      const rawEmail = email.trim().toLowerCase() === "admin" ? "admin@admin.com" : email;
+      const rawPassword =
+        email.trim().toLowerCase() === "admin" && password === "admin" ? "admin123" : password;
+
+      const e1 = emailSchema.safeParse(rawEmail);
+      const p1 = passwordSchema.safeParse(rawPassword);
       if (!e1.success) return toast.error(e1.error.issues[0].message);
       if (!p1.success) return toast.error(p1.error.issues[0].message);
+
 
       if (mode === "signup") {
         const n1 = nameSchema.safeParse(name);
@@ -116,7 +122,7 @@ function AuthPage() {
             <Label htmlFor="email">Email</Label>
             <Input
               id="email"
-              type="email"
+              type="text"
               autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
